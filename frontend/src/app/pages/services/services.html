@@ -1,0 +1,217 @@
+<main class="services-page">
+  <section class="services-container">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Creator profile</p>
+        <h1>My services</h1>
+
+        <p class="description">
+          Add the professional services you want to offer
+          through Krevia.
+        </p>
+      </div>
+
+      @if (!showForm) {
+        <button
+          type="button"
+          class="primary-button"
+          (click)="openForm()"
+        >
+          Add service
+        </button>
+      }
+    </header>
+
+    @if (successMessage) {
+      <div class="success-message">
+        {{ successMessage }}
+      </div>
+    }
+
+    @if (errorMessage) {
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (showForm) {
+      <form
+        class="service-form"
+        [formGroup]="serviceForm"
+        (ngSubmit)="createService()"
+      >
+        <div class="form-heading">
+          <div>
+            <p class="eyebrow">New service</p>
+            <h2>Add a creator service</h2>
+          </div>
+
+          <button
+            type="button"
+            class="close-button"
+            (click)="closeForm()"
+          >
+            x
+          </button>
+        </div>
+
+        <label class="field">
+          Service title
+
+          <input
+            type="text"
+            formControlName="title"
+            placeholder="Example: Responsive website development"
+          />
+
+          <small>
+            {{ serviceForm.controls.title.value.length }}
+            / 120
+          </small>
+        </label>
+
+        <label class="field">
+          Description
+
+          <textarea
+            rows="6"
+            formControlName="description"
+            placeholder="Explain what the client will receive..."
+          ></textarea>
+
+          <small>
+            {{ serviceForm.controls.description.value.length }}
+            / 1500
+          </small>
+        </label>
+
+        <label class="field">
+          Category
+
+          <select formControlName="category">
+            <option value="">Select a category</option>
+            <option value="Graphic Design">Graphic Design</option>
+            <option value="Web Development">Web Development</option>
+            <option value="Mobile Development">Mobile Development</option>
+            <option value="UI/UX Design">UI/UX Design</option>
+            <option value="Photography">Photography</option>
+            <option value="Video Editing">Video Editing</option>
+            <option value="Writing">Writing</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Consulting">Consulting</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+
+        <div class="field-grid">
+          <label class="field">
+            Starting price
+
+            <input
+              type="number"
+              formControlName="startingPrice"
+              min="0"
+              step="0.01"
+            />
+          </label>
+
+          <label class="field">
+            Delivery time in days
+
+            <input
+              type="number"
+              formControlName="deliveryDays"
+              min="1"
+              max="365"
+            />
+          </label>
+        </div>
+
+        <footer class="form-actions">
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="closeForm()"
+            [disabled]="saving"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="primary-button"
+            [disabled]="saving"
+          >
+            {{ saving ? 'Adding...' : 'Add service' }}
+          </button>
+        </footer>
+      </form>
+    }
+
+    @if (loading) {
+      <div class="status-card">
+        Loading services...
+      </div>
+    } @else if (services.length === 0 && !showForm) {
+      <div class="empty-state">
+        <h2>No services added yet</h2>
+
+        <p>
+          Add your first service so clients can understand
+          what you offer.
+        </p>
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="openForm()"
+        >
+          Add your first service
+        </button>
+      </div>
+    } @else {
+      <section class="service-grid">
+        @for (service of services; track service.id) {
+          <article class="service-card">
+            <div class="service-top">
+              <span class="category">
+                {{ service.category }}
+              </span>
+
+              <button
+                type="button"
+                class="delete-button"
+                (click)="deleteService(service)"
+              >
+                Delete
+              </button>
+            </div>
+
+            <h2>{{ service.title }}</h2>
+
+            <p class="service-description">
+              {{ service.description }}
+            </p>
+
+            <footer class="service-details">
+              <div>
+                <span>Starting at</span>
+                <strong>
+                  {{ service.startingPrice }}
+                </strong>
+              </div>
+
+              <div>
+                <span>Delivery</span>
+                <strong>
+                  {{ service.deliveryDays }}
+                  day{{ service.deliveryDays === 1 ? '' : 's' }}
+                </strong>
+              </div>
+            </footer>
+          </article>
+        }
+      </section>
+    }
+  </section>
+</main>
