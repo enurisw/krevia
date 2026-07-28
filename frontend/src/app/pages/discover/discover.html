@@ -1,0 +1,149 @@
+<main class="discover-page">
+  <section class="discover-container">
+    <header class="page-header">
+      <p class="eyebrow">Krevia marketplace</p>
+      <h1>Discover creators</h1>
+
+      <p>
+        Find skilled creators, freelancers and teams for
+        your next project.
+      </p>
+    </header>
+
+    <form
+      class="filter-card"
+      [formGroup]="filters"
+      (ngSubmit)="loadCreators()"
+    >
+      <input
+        type="search"
+        formControlName="search"
+        placeholder="Search creators, skills or services"
+      />
+
+      <select formControlName="category">
+        <option value="">All categories</option>
+        <option value="Graphic Design">Graphic Design</option>
+        <option value="Web Development">Web Development</option>
+        <option value="Mobile Development">
+          Mobile Development
+        </option>
+        <option value="UI/UX Design">UI/UX Design</option>
+        <option value="Photography">Photography</option>
+        <option value="Video Editing">Video Editing</option>
+        <option value="Writing">Writing</option>
+        <option value="Marketing">Marketing</option>
+        <option value="Consulting">Consulting</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <button type="submit" class="primary-button">
+        Search
+      </button>
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="clearFilters()"
+      >
+        Clear
+      </button>
+    </form>
+
+    @if (errorMessage) {
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (loading) {
+      <div class="status-card">
+        Loading creators...
+      </div>
+    } @else if (creators.length === 0) {
+      <div class="status-card">
+        <h2>No creators found</h2>
+        <p>Try changing your search or category.</p>
+      </div>
+    } @else {
+      <section class="creator-grid">
+        @for (creator of creators; track creator.userId) {
+          <article class="creator-card">
+            <header class="creator-header">
+              <div class="avatar">
+                {{ (creator.fullName || 'C').charAt(0).toUpperCase() }}
+              </div>
+
+              <div>
+                <h2>{{ creator.fullName || 'Krevia creator' }}</h2>
+
+                <span class="profile-type">
+                  {{ formatValue(creator.profileType) }}
+                </span>
+              </div>
+            </header>
+
+            <h3>
+              {{ creator.headline || 'Krevia creator' }}
+            </h3>
+
+            <p class="bio">
+              {{
+                creator.bio ||
+                'This creator has not added a biography yet.'
+              }}
+            </p>
+
+            @if (creator.skills.length > 0) {
+              <div class="skill-list">
+                @for (
+                  skill of creator.skills.slice(0, 4);
+                  track skill
+                ) {
+                  <span class="skill">{{ skill }}</span>
+                }
+              </div>
+            }
+
+            <div class="creator-details">
+              <span>
+                {{ creator.location || 'Location not added' }}
+              </span>
+
+              <span>
+                {{ creator.services.length }}
+                service{{
+                  creator.services.length === 1 ? '' : 's'
+                }}
+              </span>
+            </div>
+
+            <footer class="card-footer">
+              <div>
+                <small>Starting from</small>
+
+                <strong>
+                  @if (getStartingPrice(creator) !== null) {
+                    LKR {{ getStartingPrice(creator) }}
+                  } @else {
+                    Not listed
+                  }
+                </strong>
+              </div>
+
+              <a
+                class="primary-button link-button"
+                [routerLink]="[
+                  '/creators',
+                  creator.userId
+                ]"
+              >
+                View profile
+              </a>
+            </footer>
+          </article>
+        }
+      </section>
+    }
+  </section>
+</main>

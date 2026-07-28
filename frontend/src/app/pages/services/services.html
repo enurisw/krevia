@@ -127,6 +127,12 @@
           </label>
         </div>
 
+        @if (errorMessage) {
+          <div class="error-message">
+            {{ errorMessage }}
+          </div>
+        }
+
         <footer class="form-actions">
           <button
             type="button"

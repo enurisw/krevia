@@ -12,6 +12,10 @@ public interface CreatorServiceRepository
             Long userId
     );
 
+    List<CreatorService> findAllByUserIdAndActiveTrueOrderByCreatedAtDesc(
+            Long userId
+    );
+
     Optional<CreatorService> findByIdAndUserId(
             Long id,
             Long userId

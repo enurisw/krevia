@@ -5,6 +5,10 @@ import { Onboarding } from './pages/onboarding/onboarding';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Profile } from './pages/profile/profile';
 import { Services } from './pages/services/services';
+import { Discover } from './pages/discover/discover';
+import {
+  CreatorProfile
+} from './pages/creator-profile/creator-profile';
 import { authGuard } from './core/auth/auth.guard';
 import { onboardingGuard } from './core/profile/onboarding.guard';
 
@@ -45,6 +49,14 @@ export const routes: Routes = [
       authGuard,
       onboardingGuard
     ]
+  },
+  {
+    path: 'discover',
+    component: Discover
+  },
+  {
+    path: 'creators/:userId',
+    component: CreatorProfile
   },
   {
     path: '',

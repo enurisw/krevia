@@ -55,8 +55,10 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
+        String email = request.email().trim().toLowerCase();
+
         User user = userRepository
-                .findByEmailIgnoreCase(request.email().trim())
+                .findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED,
                         "Invalid email or password"

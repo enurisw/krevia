@@ -1,0 +1,158 @@
+<main class="profile-page">
+  <section class="profile-container">
+    <a routerLink="/discover" class="back-link">
+      Back to Discover
+    </a>
+
+    @if (loading) {
+      <div class="status-card">
+        Loading creator profile...
+      </div>
+    } @else if (creator) {
+      <header class="profile-header">
+        <div class="avatar">
+          {{ (creator.fullName || 'C').charAt(0).toUpperCase() }}
+        </div>
+
+        <div class="identity">
+          <span class="profile-type">
+            {{ formatValue(creator.profileType) }}
+          </span>
+
+          <h1>{{ creator.fullName || 'Krevia creator' }}</h1>
+
+          <p>
+            {{ creator.headline || 'Krevia creator' }}
+          </p>
+        </div>
+      </header>
+
+      <section class="profile-layout">
+        <div class="main-column">
+          <article class="content-card">
+            <h2>About</h2>
+
+            <p class="bio">
+              {{
+                creator.bio ||
+                'This creator has not added a biography yet.'
+              }}
+            </p>
+          </article>
+
+          <article class="content-card">
+            <h2>Skills</h2>
+
+            @if (creator.skills.length > 0) {
+              <div class="skill-list">
+                @for (
+                  skill of creator.skills;
+                  track skill
+                ) {
+                  <span class="skill">{{ skill }}</span>
+                }
+              </div>
+            } @else {
+              <p class="muted">No skills added.</p>
+            }
+          </article>
+
+          <section>
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Professional work</p>
+                <h2>Services</h2>
+              </div>
+
+              <span>
+                {{ creator.services.length }} available
+              </span>
+            </div>
+
+            @if (creator.services.length === 0) {
+              <div class="content-card">
+                This creator has not published any services.
+              </div>
+            } @else {
+              <div class="service-list">
+                @for (
+                  service of creator.services;
+                  track service.id
+                ) {
+                  <article class="service-card">
+                    <span class="category">
+                      {{ service.category }}
+                    </span>
+
+                    <h3>{{ service.title }}</h3>
+
+                    <p>{{ service.description }}</p>
+
+                    <footer>
+                      <div>
+                        <small>Starting price</small>
+                        <strong>
+                          LKR {{ service.startingPrice }}
+                        </strong>
+                      </div>
+
+                      <div>
+                        <small>Delivery time</small>
+                        <strong>
+                          {{ service.deliveryDays }}
+                          day{{
+                            service.deliveryDays === 1
+                              ? ''
+                              : 's'
+                          }}
+                        </strong>
+                      </div>
+                    </footer>
+                  </article>
+                }
+              </div>
+            }
+          </section>
+        </div>
+
+        <aside class="details-card">
+          <h2>Creator details</h2>
+
+          <div class="detail">
+            <span>Location</span>
+            <strong>
+              {{ creator.location || 'Not added' }}
+            </strong>
+          </div>
+
+          <div class="detail">
+            <span>Profile type</span>
+            <strong>
+              {{ formatValue(creator.profileType) }}
+            </strong>
+          </div>
+
+          <div class="detail">
+            <span>Services</span>
+            <strong>{{ creator.services.length }}</strong>
+          </div>
+
+          @if (creator.websiteUrl) {
+            <a
+              class="website-button"
+              [href]="creator.websiteUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Visit portfolio
+            </a>
+          }
+        </aside>
+      </section>
+    } @else {
+      <div class="status-card error">
+        {{ errorMessage }}
+      </div>
+    }
+  </section>
+</main>

@@ -5,7 +5,7 @@ import {
   Validators
 } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { finalize } from 'rxjs';
+import { finalize, retry, timeout } from 'rxjs';
 
 import {
   CreatorService,
@@ -72,6 +72,11 @@ export class Services implements OnInit {
 
     this.servicesService.getMyServices()
       .pipe(
+        timeout(15000),
+        retry({
+          count: 1,
+          delay: 300
+        }),
         finalize(() => {
           this.loading = false;
         })
@@ -79,12 +84,10 @@ export class Services implements OnInit {
       .subscribe({
         next: services => {
           this.services = services ?? [];
+          this.successMessage = '';
         },
-        error: (error: HttpErrorResponse) => {
-          this.errorMessage =
-            error.error?.detail ??
-            error.error?.message ??
-            'Could not load your services.';
+        error: (error: HttpErrorResponse | Error) => {
+          this.errorMessage = this.getLoadServicesErrorMessage(error);
         }
       });
   }
@@ -128,6 +131,12 @@ export class Services implements OnInit {
     this.errorMessage = '';
 
     this.servicesService.createService(request)
+      .pipe(
+        timeout(15000),
+        finalize(() => {
+          this.saving = false;
+        })
+      )
       .subscribe({
         next: service => {
           this.services = [
@@ -135,18 +144,13 @@ export class Services implements OnInit {
             ...this.services
           ];
 
-          this.saving = false;
           this.showForm = false;
           this.successMessage =
             'Your service was added successfully.';
         },
-        error: (error: HttpErrorResponse) => {
-          this.saving = false;
-
+        error: (error: HttpErrorResponse | Error) => {
           this.errorMessage =
-            error.error?.message ??
-            error.error?.detail ??
-            'Could not add the service.';
+            this.getCreateServiceErrorMessage(error);
         }
       });
   }
@@ -175,5 +179,57 @@ export class Services implements OnInit {
             'Could not delete the service.';
         }
       });
+  }
+
+  private getCreateServiceErrorMessage(
+    error: HttpErrorResponse | Error
+  ): string {
+    if (!(error instanceof HttpErrorResponse)) {
+      return error.name === 'TimeoutError'
+        ? 'Adding the service took too long. Please check that the backend is running and try again.'
+        : 'Could not add the service.';
+    }
+
+    if (error.status === 0) {
+      return 'Could not reach the backend. Please check that it is running.';
+    }
+
+    if (error.status === 401 || error.status === 403) {
+      return 'Only creator accounts can add services.';
+    }
+
+    return error.error?.detail ??
+      error.error?.message ??
+      this.parsePlainError(error.error) ??
+      'Could not add the service.';
+  }
+
+  private parsePlainError(error: unknown): string | null {
+    return typeof error === 'string'
+      ? error
+      : null;
+  }
+
+  private getLoadServicesErrorMessage(
+    error: HttpErrorResponse | Error
+  ): string {
+    if (!(error instanceof HttpErrorResponse)) {
+      return error.name === 'TimeoutError'
+        ? 'Loading services took too long. Please refresh the page.'
+        : 'Could not load your services.';
+    }
+
+    if (error.status === 0) {
+      return 'Could not reach the backend. Please check that it is running.';
+    }
+
+    if (error.status === 401 || error.status === 403) {
+      return 'Please log in again to view your services.';
+    }
+
+    return error.error?.detail ??
+      error.error?.message ??
+      this.parsePlainError(error.error) ??
+      'Could not load your services.';
   }
 }
