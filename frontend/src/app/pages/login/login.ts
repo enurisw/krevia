@@ -7,6 +7,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../core/auth/auth.service';
+import { ProfileService } from '../../core/profile/profile.service';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,7 @@ import { AuthService } from '../../core/auth/auth.service';
 export class Login {
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
+  private readonly profileService = inject(ProfileService);
   private readonly router = inject(Router);
 
   loading = false;
@@ -43,8 +45,7 @@ export class Login {
     this.authService.login(this.loginForm.getRawValue())
       .subscribe({
         next: () => {
-          this.loading = false;
-          this.router.navigate(['/dashboard']);
+          this.redirectAfterLogin();
         },
         error: (error: HttpErrorResponse) => {
           this.loading = false;
@@ -52,6 +53,33 @@ export class Login {
             error.error?.detail ??
             error.error?.message ??
             'Invalid email or password.';
+        }
+      });
+  }
+
+  private redirectAfterLogin(): void {
+    this.profileService.getMyProfile()
+      .subscribe({
+        next: profile => {
+          this.loading = false;
+
+          const destination =
+            profile.onboardingCompleted
+              ? '/dashboard'
+              : '/onboarding';
+
+          this.router.navigate([destination]);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.loading = false;
+
+          if (error.status === 404) {
+            this.router.navigate(['/onboarding']);
+            return;
+          }
+
+          this.errorMessage =
+            'Login succeeded, but your profile could not be loaded.';
         }
       });
   }

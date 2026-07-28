@@ -53,7 +53,7 @@ export class Register {
       .subscribe({
         next: () => {
           this.loading = false;
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/onboarding']);
         },
         error: (error: HttpErrorResponse) => {
           this.loading = false;

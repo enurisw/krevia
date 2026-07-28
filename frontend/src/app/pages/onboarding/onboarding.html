@@ -1,0 +1,266 @@
+<main class="onboarding-page">
+  <section class="onboarding-card">
+    <header class="header">
+      <div>
+        <div class="brand">Krevia</div>
+        <p class="eyebrow">Set up your profile</p>
+        <h1>Tell us about yourself</h1>
+        <p class="description">
+          This information helps Krevia personalize your
+          workspace and connect you with the right people.
+        </p>
+      </div>
+
+      <span class="step-label">
+        Step {{ currentStep }} of 3
+      </span>
+    </header>
+
+    <div class="progress">
+      <div
+        class="progress-bar"
+        [style.width.%]="currentStep * 33.333"
+      ></div>
+    </div>
+
+    <form
+      [formGroup]="onboardingForm"
+      (ngSubmit)="submit()"
+    >
+      @if (currentStep === 1) {
+        <section class="step">
+          <h2>How will you use Krevia?</h2>
+          <p class="step-description">
+            You can change this later from your settings.
+          </p>
+
+          <div class="choice-grid">
+            <label class="choice">
+              <input
+                type="radio"
+                formControlName="accountType"
+                value="CLIENT"
+              />
+
+              <span>
+                <strong>Hire creators</strong>
+                <small>
+                  Find people and teams for your projects.
+                </small>
+              </span>
+            </label>
+
+            <label class="choice">
+              <input
+                type="radio"
+                formControlName="accountType"
+                value="CREATOR"
+              />
+
+              <span>
+                <strong>Offer services</strong>
+                <small>
+                  Show your work and find new opportunities.
+                </small>
+              </span>
+            </label>
+
+            <label class="choice">
+              <input
+                type="radio"
+                formControlName="accountType"
+                value="BOTH"
+              />
+
+              <span>
+                <strong>Do both</strong>
+                <small>
+                  Hire other creators and offer your services.
+                </small>
+              </span>
+            </label>
+          </div>
+
+          <label class="field">
+            Which describes you best?
+
+            <select formControlName="profileType">
+              <option value="STUDENT">Student</option>
+
+              <option value="INDEPENDENT_CREATOR">
+                Independent creator
+              </option>
+
+              <option value="PROFESSIONAL_FREELANCER">
+                Professional freelancer
+              </option>
+
+              <option value="STARTUP_FOUNDER">
+                Startup founder
+              </option>
+
+              <option value="STARTUP_TEAM">
+                Startup team
+              </option>
+
+              <option value="AGENCY">Agency</option>
+              <option value="BUSINESS">Business</option>
+
+              <option value="GENERAL_CLIENT">
+                General client
+              </option>
+            </select>
+          </label>
+        </section>
+      }
+
+      @if (currentStep === 2) {
+        <section class="step">
+          <h2>Create your introduction</h2>
+          <p class="step-description">
+            Give people a clear idea of what you do.
+          </p>
+
+          <label class="field">
+            Professional headline
+
+            <input
+              type="text"
+              formControlName="headline"
+              placeholder="Example: UI designer and front-end developer"
+            />
+
+            <small>
+              {{ onboardingForm.controls.headline.value.length }}
+              / 150
+            </small>
+          </label>
+
+          @if (
+            onboardingForm.controls.headline.touched &&
+            onboardingForm.controls.headline.invalid
+          ) {
+            <p class="field-error">
+              Please enter a headline.
+            </p>
+          }
+
+          <label class="field">
+            About you
+
+            <textarea
+              formControlName="bio"
+              rows="6"
+              placeholder="Describe your experience, interests and the kind of projects you enjoy."
+            ></textarea>
+
+            <small>
+              {{ onboardingForm.controls.bio.value.length }}
+              / 1000
+            </small>
+          </label>
+        </section>
+      }
+
+      @if (currentStep === 3) {
+        <section class="step">
+          <h2>Add your professional details</h2>
+          <p class="step-description">
+            These details help improve search and discovery.
+          </p>
+
+          <label class="field">
+            Location
+
+            <input
+              type="text"
+              formControlName="location"
+              placeholder="Example: Kandy, Sri Lanka"
+            />
+          </label>
+
+          <label class="field">
+            Website or portfolio
+
+            <input
+              type="url"
+              formControlName="websiteUrl"
+              placeholder="https://yourportfolio.com"
+            />
+          </label>
+
+          <label class="field">
+            Skills
+
+            <input
+              type="text"
+              formControlName="skillsText"
+              placeholder="Angular, Spring Boot, PostgreSQL"
+            />
+
+            <small>
+              Separate each skill with a comma. Maximum 20.
+            </small>
+          </label>
+
+          <div class="summary">
+            <span>Profile type</span>
+            <strong>
+              {{ onboardingForm.controls.profileType.value }}
+            </strong>
+
+            <span>Account type</span>
+            <strong>
+              {{ onboardingForm.controls.accountType.value }}
+            </strong>
+          </div>
+        </section>
+      }
+
+      @if (errorMessage) {
+        <div class="api-error">
+          {{ errorMessage }}
+        </div>
+      }
+
+      <footer class="actions">
+        @if (currentStep > 1) {
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="previousStep()"
+            [disabled]="loading"
+          >
+            Back
+          </button>
+        }
+
+        <div class="action-spacer"></div>
+
+        @if (currentStep < 3) {
+          <button
+            type="button"
+            class="primary-button"
+            (click)="nextStep()"
+          >
+            Continue
+          </button>
+        }
+
+        @if (currentStep === 3) {
+          <button
+            type="submit"
+            class="primary-button"
+            [disabled]="loading"
+          >
+            {{
+              loading
+                ? 'Creating profile...'
+                : 'Complete setup'
+            }}
+          </button>
+        }
+      </footer>
+    </form>
+  </section>
+</main>
