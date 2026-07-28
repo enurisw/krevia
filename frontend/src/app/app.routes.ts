@@ -9,6 +9,9 @@ import { Discover } from './pages/discover/discover';
 import {
   CreatorProfile
 } from './pages/creator-profile/creator-profile';
+import {
+  SendEnquiry
+} from './pages/send-enquiry/send-enquiry';
 import { authGuard } from './core/auth/auth.guard';
 import { onboardingGuard } from './core/profile/onboarding.guard';
 
@@ -53,6 +56,14 @@ export const routes: Routes = [
   {
     path: 'discover',
     component: Discover
+  },
+  {
+    path: 'creators/:userId/enquire',
+    component: SendEnquiry,
+    canActivate: [
+      authGuard,
+      onboardingGuard
+    ]
   },
   {
     path: 'creators/:userId',

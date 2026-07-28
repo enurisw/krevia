@@ -193,6 +193,27 @@
   text-decoration: none;
 }
 
+.contact-button,
+.service-enquiry-button {
+  display: grid;
+  min-height: 44px;
+  place-items: center;
+  border-radius: 9px;
+  background: #17191c;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.contact-button {
+  margin-top: 22px;
+}
+
+.service-enquiry-button {
+  margin-top: 18px;
+}
+
 .status-card {
   text-align: center;
 }

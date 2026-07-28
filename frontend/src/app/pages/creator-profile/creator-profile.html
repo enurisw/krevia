@@ -108,6 +108,20 @@
                         </strong>
                       </div>
                     </footer>
+
+                    <a
+                      class="service-enquiry-button"
+                      [routerLink]="[
+                        '/creators',
+                        creator.userId,
+                        'enquire'
+                      ]"
+                      [queryParams]="{
+                        serviceId: service.id
+                      }"
+                    >
+                      Enquire about this service
+                    </a>
                   </article>
                 }
               </div>
@@ -147,6 +161,17 @@
               Visit portfolio
             </a>
           }
+
+          <a
+            class="contact-button"
+            [routerLink]="[
+              '/creators',
+              creator.userId,
+              'enquire'
+            ]"
+          >
+            Send enquiry
+          </a>
         </aside>
       </section>
     } @else {

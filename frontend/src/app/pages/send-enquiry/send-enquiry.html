@@ -1,0 +1,131 @@
+<main class="enquiry-page">
+  <section class="enquiry-container">
+    <a
+      class="back-link"
+      [routerLink]="creator
+        ? ['/creators', creator.userId]
+        : ['/discover']"
+    >
+      Back
+    </a>
+
+    @if (loading) {
+      <div class="status-card">
+        Loading creator...
+      </div>
+    } @else if (creator) {
+      <header>
+        <p class="eyebrow">Project enquiry</p>
+        <h1>Contact {{ creator.fullName }}</h1>
+
+        <p class="description">
+          Explain what you need, your budget and your
+          preferred deadline.
+        </p>
+      </header>
+
+      @if (errorMessage) {
+        <div class="error-message">
+          {{ errorMessage }}
+        </div>
+      }
+
+      <form
+        class="enquiry-form"
+        [formGroup]="enquiryForm"
+        (ngSubmit)="sendEnquiry()"
+      >
+        <label class="field">
+          Service
+
+          <select formControlName="serviceId">
+            <option value="">General enquiry</option>
+
+            @for (
+              service of creator.services;
+              track service.id
+            ) {
+              <option [value]="service.id">
+                {{ service.title }}
+              </option>
+            }
+          </select>
+        </label>
+
+        <label class="field">
+          Project title
+
+          <input
+            type="text"
+            formControlName="title"
+            placeholder="Example: Website for my small business"
+          />
+        </label>
+
+        <label class="field">
+          Project description
+
+          <textarea
+            rows="7"
+            formControlName="description"
+            placeholder="Describe the work, expected result and important requirements..."
+          ></textarea>
+
+          <small>
+            {{
+              enquiryForm.controls.description.value.length
+            }} / 3000
+          </small>
+        </label>
+
+        <div class="field-grid">
+          <label class="field">
+            Estimated budget (LKR)
+
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              formControlName="budget"
+              placeholder="Optional"
+            />
+          </label>
+
+          <label class="field">
+            Preferred deadline
+
+            <input
+              type="date"
+              [min]="minimumDate"
+              formControlName="preferredDeadline"
+            />
+          </label>
+        </div>
+
+        <footer class="form-actions">
+          <a
+            class="secondary-button"
+            [routerLink]="[
+              '/creators',
+              creator.userId
+            ]"
+          >
+            Cancel
+          </a>
+
+          <button
+            type="submit"
+            class="primary-button"
+            [disabled]="saving"
+          >
+            {{ saving ? 'Sending...' : 'Send enquiry' }}
+          </button>
+        </footer>
+      </form>
+    } @else {
+      <div class="status-card error-message">
+        {{ errorMessage }}
+      </div>
+    }
+  </section>
+</main>
