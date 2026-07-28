@@ -1,0 +1,55 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <a routerLink="/" class="brand">Krevia</a>
+
+    <h1>Welcome back</h1>
+    <p class="subtitle">Log in to continue to your workspace.</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="submit()">
+      <label>
+        Email
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="you@example.com"
+        />
+      </label>
+
+      @if (
+        loginForm.controls.email.touched &&
+        loginForm.controls.email.invalid
+      ) {
+        <small class="field-error">Enter a valid email address.</small>
+      }
+
+      <label>
+        Password
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="Your password"
+        />
+      </label>
+
+      @if (
+        loginForm.controls.password.touched &&
+        loginForm.controls.password.invalid
+      ) {
+        <small class="field-error">Password is required.</small>
+      }
+
+      @if (errorMessage) {
+        <div class="api-error">{{ errorMessage }}</div>
+      }
+
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Logging in...' : 'Log in' }}
+      </button>
+    </form>
+
+    <p class="switch-page">
+      Don’t have an account?
+      <a routerLink="/register">Create one</a>
+    </p>
+  </div>
+</div>

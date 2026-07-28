@@ -1,0 +1,82 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <a routerLink="/" class="brand">Krevia</a>
+
+    <h1>Create your account</h1>
+    <p class="subtitle">Start hiring, creating, and collaborating.</p>
+
+    <form [formGroup]="registerForm" (ngSubmit)="submit()">
+      <label>
+        Full name
+        <input
+          type="text"
+          formControlName="fullName"
+          placeholder="Your full name"
+        />
+      </label>
+
+      @if (
+        registerForm.controls.fullName.touched &&
+        registerForm.controls.fullName.invalid
+      ) {
+        <small class="field-error">Full name is required.</small>
+      }
+
+      <label>
+        Email
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="you@example.com"
+        />
+      </label>
+
+      @if (
+        registerForm.controls.email.touched &&
+        registerForm.controls.email.invalid
+      ) {
+        <small class="field-error">Enter a valid email address.</small>
+      }
+
+      <label>
+        Password
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="Minimum 8 characters"
+        />
+      </label>
+
+      @if (
+        registerForm.controls.password.touched &&
+        registerForm.controls.password.invalid
+      ) {
+        <small class="field-error">
+          Password must contain at least 8 characters.
+        </small>
+      }
+
+      <label>
+        I want to
+        <select formControlName="accountType">
+          <option value="CLIENT">Hire creators</option>
+          <option value="CREATOR">Offer my services</option>
+          <option value="BOTH">Hire and offer services</option>
+        </select>
+      </label>
+
+      @if (errorMessage) {
+        <div class="api-error">{{ errorMessage }}</div>
+      }
+
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Creating account...' : 'Create account' }}
+      </button>
+    </form>
+
+    <p class="switch-page">
+      Already have an account?
+      <a routerLink="/login">Log in</a>
+    </p>
+  </div>
+</div>

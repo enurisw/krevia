@@ -1,0 +1,9 @@
+<main style="padding: 40px; font-family: Arial, sans-serif;">
+  <h1>Welcome, {{ user?.fullName }}</h1>
+  <p>Email: {{ user?.email }}</p>
+  <p>Account type: {{ user?.accountType }}</p>
+
+  <button type="button" (click)="logout()">
+    Log out
+  </button>
+</main>
