@@ -3,6 +3,10 @@
   <p>Email: {{ user?.email }}</p>
   <p>Account type: {{ user?.accountType }}</p>
 
+  <p>
+    <a routerLink="/profile">View profile</a>
+  </p>
+
   <button type="button" (click)="logout()">
     Log out
   </button>

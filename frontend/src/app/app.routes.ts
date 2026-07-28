@@ -3,6 +3,7 @@ import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { Onboarding } from './pages/onboarding/onboarding';
 import { Dashboard } from './pages/dashboard/dashboard';
+import { Profile } from './pages/profile/profile';
 import { authGuard } from './core/auth/auth.guard';
 import { onboardingGuard } from './core/profile/onboarding.guard';
 
@@ -23,6 +24,14 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: Dashboard,
+    canActivate: [
+      authGuard,
+      onboardingGuard
+    ]
+  },
+  {
+    path: 'profile',
+    component: Profile,
     canActivate: [
       authGuard,
       onboardingGuard

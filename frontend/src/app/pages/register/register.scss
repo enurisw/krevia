@@ -52,8 +52,7 @@ label {
   font-weight: 600;
 }
 
-input,
-select {
+input {
   box-sizing: border-box;
   width: 100%;
   padding: 13px 14px;
@@ -65,8 +64,7 @@ select {
   outline: none;
 }
 
-input:focus,
-select:focus {
+input:focus {
   border-color: #15171a;
 }
 

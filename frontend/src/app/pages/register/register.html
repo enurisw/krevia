@@ -57,13 +57,22 @@
       }
 
       <label>
-        I want to
-        <select formControlName="accountType">
-          <option value="CLIENT">Hire creators</option>
-          <option value="CREATOR">Offer my services</option>
-          <option value="BOTH">Hire and offer services</option>
-        </select>
+        Confirm password
+        <input
+          type="password"
+          formControlName="confirmPassword"
+          placeholder="Repeat your password"
+        />
       </label>
+
+      @if (
+        registerForm.controls.confirmPassword.touched &&
+        registerForm.controls.confirmPassword.invalid
+      ) {
+        <small class="field-error">
+          Please confirm your password.
+        </small>
+      }
 
       @if (errorMessage) {
         <div class="api-error">{{ errorMessage }}</div>

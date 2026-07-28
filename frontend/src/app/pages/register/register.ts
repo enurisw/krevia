@@ -7,7 +7,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../core/auth/auth.service';
-import { AccountType } from '../../core/auth/auth.models';
+import { RegisterRequest } from '../../core/auth/auth.models';
 
 @Component({
   selector: 'app-register',
@@ -37,7 +37,7 @@ export class Register {
       Validators.required,
       Validators.minLength(8)
     ]],
-    accountType: ['BOTH' as AccountType, Validators.required]
+    confirmPassword: ['', Validators.required]
   });
 
   submit(): void {
@@ -49,7 +49,22 @@ export class Register {
     this.loading = true;
     this.errorMessage = '';
 
-    this.authService.register(this.registerForm.getRawValue())
+    const formValue = this.registerForm.getRawValue();
+
+    if (formValue.password !== formValue.confirmPassword) {
+      this.loading = false;
+      this.errorMessage = 'Passwords do not match.';
+      return;
+    }
+
+    const request: RegisterRequest = {
+      fullName: formValue.fullName.trim(),
+      email: formValue.email.trim(),
+      password: formValue.password,
+      accountType: 'BOTH'
+    };
+
+    this.authService.register(request)
       .subscribe({
         next: () => {
           this.loading = false;
